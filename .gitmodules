@@ -1,0 +1,3 @@
+[submodule "vendor/Ivory-Engine"]
+	path = vendor/Ivory-Engine
+	url = https://github.com/SteliosKem/Ivory-Engine

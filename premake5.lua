@@ -19,10 +19,7 @@ project "Alchemist"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	pchheader "pch.h"
-	pchsource "Alchemist/src/pch.cpp"
-
+	
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",

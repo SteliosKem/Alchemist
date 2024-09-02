@@ -21,8 +21,10 @@ namespace Alchemist {
 		glm::vec2 get_acceleration() const { return m_acceleration; }
 		float get_mass() const { return 1 / m_mass_inverse; }
 		float get_damping() const { return m_damping; }
+
+		float on_update(float dt) { integrate(dt); }
 	private:
-		void integrate(Timestep dt);
+		void integrate(float dt);
 	private:
 		glm::vec2 m_position;
 		glm::vec2 m_velocity;

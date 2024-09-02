@@ -1,13 +1,13 @@
 #include "PointMass.h"
 
 namespace Alchemist {
-	void PointMass2D::integrate(Timestep dt) {
+	void PointMass2D::integrate(float dt) {
 		// Update velocity
-		m_velocity += m_acceleration * (float)dt;
+		m_velocity += m_acceleration * dt;
 		// Scale velocity down depending on damping factor
 		m_velocity *= powf(m_damping, dt);
 
 		// Update position
-		m_position += m_velocity * (float)dt;
+		m_position += m_velocity * dt;
 	}
 }

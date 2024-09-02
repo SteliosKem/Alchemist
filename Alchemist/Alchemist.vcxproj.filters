@@ -30,6 +30,9 @@
     <ClInclude Include="src\PointMass.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Timestep.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>

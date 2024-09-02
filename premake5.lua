@@ -10,10 +10,6 @@ workspace "Alchemist"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-IncludeDir = {}
-IncludeDir["glm"] = "Alchemist/vendor/glm"
-
-
 project "Alchemist"
 	location "Alchemist"
 	kind "StaticLib"
@@ -36,7 +32,7 @@ project "Alchemist"
 
 	includedirs {
 		"%{prj.name}/src",
-		"%{IncludeDir.glm}",
+		"Alchemist/vendor/glm",
 	}
 	systemversion "latest"
 
@@ -51,45 +47,3 @@ project "Alchemist"
 	filter "configurations:Dist"
 		runtime "Release"
 		optimize "on"
-
-project "Sandbox"
-	location "Sandbox"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files {
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs {
-		"Sandbox/src",
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-
-		defines {
-			"IV_PLATFORM_WINDOWS"
-		}
-
-	filter "configurations:Debug"
-		defines "IV_DEBUG"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		defines "IV_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines "IV_DIST"
-		runtime "Release"
-		optimize "on"
-

@@ -1,13 +1,14 @@
 #pragma once
 #include "glm/glm.hpp"
+#include <utility>
 
 namespace Alchemist {
 	class PointMass2D {
 	public:
-		PointMass2D(float mass_inverse, float damping = 1, const glm::vec2& acceleration = {0.0f, 0.0f}, 
+		PointMass2D(float mass_inverse, float damping = 1, const glm::vec2& acceleration = { 0.0f, 0.0f },
 			const glm::vec2& velocity = { 0.0f, 0.0f }, const glm::vec2& position = { 0.0f, 0.0f })
 			: m_acceleration{ acceleration }, m_velocity{ velocity }, m_position{ position }
-			, m_mass_inverse{ mass_inverse }, m_damping{damping} {}
+			, m_mass_inverse{ mass_inverse }, m_damping{ damping } {}
 
 		// Setters
 		void set_acceleration(const glm::vec2& a) { m_acceleration = a; }
@@ -20,7 +21,12 @@ namespace Alchemist {
 		glm::vec2 get_position() const { return m_position; }
 		glm::vec2 get_velocity() const { return m_velocity; }
 		glm::vec2 get_acceleration() const { return m_acceleration; }
+
+		glm::vec2& get_position() { return m_position; }
+		glm::vec2& get_velocity() { return m_velocity; }
+		glm::vec2& get_acceleration() { return m_acceleration; }
 		float get_mass() const { return 1 / m_mass_inverse; }
+		float get_mass_inverse() const { return m_mass_inverse; }
 		float get_damping() const { return m_damping; }
 
 		// Call every frame
@@ -29,7 +35,7 @@ namespace Alchemist {
 	private:
 		void integrate(float dt);
 		void clear_force_accumulator() { m_force_accumulator = { 0.0f, 0.0f }; }
-		
+
 	private:
 		glm::vec2 m_position;
 		glm::vec2 m_velocity;
@@ -42,8 +48,8 @@ namespace Alchemist {
 		float m_mass_inverse;
 
 		// Holds overall force for every update pass
-		glm::vec2 m_force_accumulator{0.0f};
-		
+		glm::vec2 m_force_accumulator{ 0.0f };
+
 	};
 
 	class ForceGenerator2D {
@@ -70,12 +76,41 @@ namespace Alchemist {
 
 	class PointMassGravity : public ForceGenerator2D {
 	public:
-		PointMassGravity(const glm::vec2& gravity = {0.0f, -9.8f}) : m_gravity{gravity} {}
+		PointMassGravity(const glm::vec2& gravity = { 0.0f, -9.8f }) : m_gravity{ gravity } {}
 		void update_force(PointMass2D* point_mass, float dt) override;
 
 		void set_gravity(const glm::vec2& gravity) { m_gravity = gravity; }
 		glm::vec2 get_gravity() const { return m_gravity; }
 	private:
 		glm::vec2 m_gravity;
+	};
+
+	class PointMassSpring : public ForceGenerator2D {
+	public:
+		PointMassSpring(PointMass2D* attached, float constant, float rest)
+			: m_attached_object{ attached }, m_spring_constant{ constant }, m_spring_rest_length{ rest } {}
+		void update_force(PointMass2D* point_mass, float dt) override;
+
+		float get_current_spring_length() const { return m_spring_length.length(); }
+		float& get_constant() { return m_spring_constant; }
+		float& get_rest_length() { return m_spring_rest_length; }
+	private:
+		PointMass2D* m_attached_object;
+		glm::vec2 m_spring_length;
+		float m_spring_constant;
+		float m_spring_rest_length;
+	};
+
+	class AnchoredPointMassSpring : public ForceGenerator2D {
+	public:
+		AnchoredPointMassSpring(const glm::vec2& position, float constant, float rest)
+			: m_position{ position }, m_spring_constant{ constant }, m_spring_rest_length{ rest } {}
+		void update_force(PointMass2D* point_mass, float dt) override;
+		float get_current_spring_length() const { return m_spring_length.length(); }
+	private:
+		glm::vec2 m_position;
+		glm::vec2 m_spring_length;
+		float m_spring_constant;
+		float m_spring_rest_length;
 	};
 }
